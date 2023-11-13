@@ -27,8 +27,32 @@ open: http://123.123.123:11 -> our app
 
 ## run bash remotely
 
-``ssh ec2-user@{IP} -i ~/id_student "bash -s" < example_remotely.sh``
+``ssh ec2-user@{IP} -i ~/id_student "bash -s" < install_java_app.sh``
 
 ## do narzędzi Continous Integration (CI) checkout this out
 
 * Semantic versioning 2.0.0 do release tagów ``https://semver.org/`` 
+
+## mariadb sql 
+
+1. instalujemy mariadb
+``dnf install mariadb105-server``
+
+2. status serwera
+``sudo systemctl status mariadb`` 
+
+3. autostart i uruchomienie
+``sudo systemctl enable mariadb``
+``sudo systemctl start mariadb``
+
+4. wejscie do mariadb
+``sudo mysql -u root``
+``create database my_db;``
+
+5. utworz skrypcik sql
+`` echo "select now() my_time, 2+2 equasion, 'hello world' as hello" > my_sql.sql ``
+
+6. uruchom 
+``sudo mysql -u root my_db < my_sql.sql > result.txt``
+
+
