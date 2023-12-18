@@ -62,3 +62,41 @@ open: http://123.123.123:11 -> our app
 - konfiguracja zmiennych środowiskowych, przekazane w momencie uruchomienia
 - przy użyciu ``systemd`` oraz ``etc/init.d`` 
 
+
+## docker
+
+1. instalujemy
+`` sudo dnf install docker -y ``
+`` sudo systemctl start docker ``
+`` sudo docker --version ``
+
+2. pierwszy hello world
+`` sudo docker run alpine sh -c "echo 'hello world'" ``
+
+3.  apache i nginx
+`` sudo docker run -d -p 8080:80 httpd:2.4.12 ``
+`` sudo docker run -d -p 80:80 nginx:latest ``
+`` sudo docker rm -f CONTAINER_ID ``
+
+4. config Dockerfile 
+
+FROM alpine:latest
+
+RUN apk add openjdk17
+
+RUN mkdir -p /opt/ecommerce
+
+RUN wget https://github.com/jkanclerz/computer-programming-4/releases/download/v1.30/my-ecommerce-0.1.jar -O /opt/ecommerce/app.jar
+
+RUN adduser ecommerce --disabled-password
+
+USER ecommerce
+
+EXPOSE 8080
+ 
+CMD ["/usr/bin/java", "-Dserver.port=8080", "-jar", "/opt/ecommerce/app.jar"] 
+
+5. build
+
+`` sudo docker build -t my_ecommerce ./ ``
+`` sudo docker run --name my_sexy_app -d -p 80:8080 my_ecommerce ``

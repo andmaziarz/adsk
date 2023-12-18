@@ -1,0 +1,78 @@
+---
+- name: "install ecommerce app"
+  hosts: app_nodes
+  vars:
+    my_favorite_software:
+      - cowsay
+      - mc
+      - tree
+    my_must_have_software:
+      - java-17-amazon-corretto
+    app_url:
+      https://github.com/jkanclerz/computer-programming-4/releases/download/v1.30/my-ecommerce-0.1.jar
+    app_name: ecommerce
+    app_dir: /opt/ecommerce
+  become: yes
+  tasks:
+  
+    - name: "My first command via ansible"
+      shell: "echo 'hello world' > hello_world.txt"
+
+    - name: "Install my favorite software"
+      dnf:
+        name: 
+          "{{ my_favorite_software }}"
+        state: latest
+    
+    - name: "Install my must have software"
+      dnf:
+        name: 
+          "{{ my_must_have_software }}"
+        state: latest
+
+    - name: "Create app dir"
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+
+    - name: "Download app"
+      get_url:
+        url: "{{ app_url }}"
+        dest: "{{ app_dir }}/{{ app_name }}.jar"
+    
+    - name: "Create systemd config"
+      template:
+        src: templates/app.service.j2
+        dest: "/etc/systemd/system/{{ app_name }}.service"
+
+    - name: "Restart my service & add to autostart"
+      systemd_service:
+        name: "{{ app_name }}"
+        state: restarted
+        enabled: yes
+        daemon_reload: yes
+
+- name: "Install proxy"
+  hosts: lb_nodes
+  become: yes
+  vars:
+    app_node_ips:
+     - 172.31.19.115
+     - 172.31.17.239
+  tasks: 
+    - name: install nginx
+      dnf:
+        name: nginx
+        state: latest
+
+    - name: copy config
+      template:
+        src: templates/app.conf.j2
+        dest: /etc/nginx/conf.d/ecommerce.conf
+
+    - name: restart my nginx proxy
+      systemd_service:
+        name: nginx
+        state: restarted
+        enabled: yes
+        daemon_reload: yes

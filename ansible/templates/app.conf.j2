@@ -1,0 +1,17 @@
+upstream ecommerce {
+    {% for ip in app_node_ips %}
+        server {{ ip }}:8080;
+    {% endfor %}
+
+}
+
+
+server {
+        listen 80;
+        root /var/www;
+
+    location / {
+        proxy_pass http://ecommerce;
+        proxy_set_header Host   $host;
+    }
+}
