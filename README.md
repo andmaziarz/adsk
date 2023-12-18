@@ -1,4 +1,4 @@
-#  JAVA APP
+#  JAVA APP 
 
 ## ARRANGE
 
@@ -55,4 +55,10 @@ open: http://123.123.123:11 -> our app
 6. uruchom 
 ``sudo mysql -u root my_db < my_sql.sql > result.txt``
 
+## mechanizm automatycznego uruchomienia maszyny (AWS EC2)
+- autostart/autoexec
+- jesli sie wywali, to uruchomienie ponownie
+- sprawdzić, żeby nie uruchamiała się wiecej niż 2 razy (np. proces PID)
+- konfiguracja zmiennych środowiskowych, przekazane w momencie uruchomienia
+- przy użyciu ``systemd`` oraz ``etc/init.d`` 
 
